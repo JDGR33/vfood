@@ -1,0 +1,1 @@
+from food_price_scraping import main
