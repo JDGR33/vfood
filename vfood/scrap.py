@@ -1,7 +1,3 @@
-from cgi import print_exception
-from locale import currency
-from modulefinder import STORE_NAME
-
 # Web Scraping libraries
 from urllib.request import urlopen
 from bs4 import BeautifulSoup

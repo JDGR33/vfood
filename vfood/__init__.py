@@ -1,1 +1,1 @@
-from food_price_scraping import main
+from vfood import main

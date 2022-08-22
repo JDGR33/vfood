@@ -1,0 +1,11 @@
+LICENSE
+setup.py
+test/test.py
+vfood/__init__.py
+vfood/main.py
+vfood/scrap.py
+vfood.egg-info/PKG-INFO
+vfood.egg-info/SOURCES.txt
+vfood.egg-info/dependency_links.txt
+vfood.egg-info/requires.txt
+vfood.egg-info/top_level.txt

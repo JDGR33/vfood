@@ -8,14 +8,16 @@ The aim of the project is to create a package for scraping Food pricing informat
 
 # Usage
 ```python
-import food_price_scraping.main as fs
+import vfood.main as fs
 
-#Scrape tomate and leche prices, delete unrelated results and create a column to show all the prices in US dollars using the official exchange rate
+#Scrape tomate and leche prices as a pd.DataFrame, delete unrelated 
+# results and create a column to show all the 
+# prices in US dollars using the official exchange rate
 df = fs.scrape_prep_data(["tomate","leche"])
 
-#Scrape the official exchange rate in a dictionary with the date, and the source
+#Scrape the official exchange rate a dictionary 
+# with the date, and the source
 exchange_info = fs.bcv_exchange_rate()
-
 ```
 
 
