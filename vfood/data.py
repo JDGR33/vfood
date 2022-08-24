@@ -18,7 +18,6 @@ from urllib.error import URLError  # For error handling
 # Data manipulation libraries
 import pandas as pd
 import regex as re
-
 import numpy as np
 
 # Miscellaneous
@@ -26,7 +25,7 @@ from datetime import date  # For getting the Date
 import http.client  # For establishing the number of header
 
 
-# Import utilitie functions
+# Import utility functions
 from vfood.scrap import (
     collect_data_global,
     gama_get_products,
@@ -450,7 +449,16 @@ def scrape_raw_data(products: list) -> pd.DataFrame:
         print("Raw data extracted")
         return raw_data
     else:
-        return None
+        return pd.DataFrame(
+            columns=[
+                "product_name",
+                "product_price",
+                "product_availability",
+                "date",
+                "store",
+                "search_term",
+            ]
+        )
 
 
 def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
@@ -474,7 +482,7 @@ def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
     """
     raw_data = scrape_raw_data(products)  # Get the raw data
     assert raw_data.shape[1] == 6, f"The DataFrame has extra columns"
-    if isinstance(raw_data, pd.DataFrame):
+    if raw_data.shape[0] != 0:
         # If the product is a single, check if the name of the product contains it
         search_terms = list(raw_data["search_term"].unique())
         for search_term in search_terms:

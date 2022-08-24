@@ -2,7 +2,7 @@
 
 # Description
 
-The aim of the project is to create a package for scraping Food pricing information from supermarkets in Venezuela. This may include functions to get related information, like the official exchange rate. 
+The aim of the project is to create a package for scraping Food prices from supermarkets in Venezuela. This could include functions to get related information, like the official exchange rate. 
 
 # Installation
 

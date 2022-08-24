@@ -1,8 +1,7 @@
 LICENSE
 setup.py
-test/test.py
 vfood/__init__.py
-vfood/main.py
+vfood/data.py
 vfood/scrap.py
 vfood.egg-info/PKG-INFO
 vfood.egg-info/SOURCES.txt

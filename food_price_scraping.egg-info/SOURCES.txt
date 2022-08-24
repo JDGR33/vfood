@@ -1,8 +1,0 @@
-setup.py
-food_price_scraping/__init__.py
-food_price_scraping/main.py
-food_price_scraping/scrap.py
-food_price_scraping.egg-info/PKG-INFO
-food_price_scraping.egg-info/SOURCES.txt
-food_price_scraping.egg-info/dependency_links.txt
-food_price_scraping.egg-info/top_level.txt
