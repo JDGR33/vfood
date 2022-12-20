@@ -2,31 +2,24 @@
 
 # Description
 
-The aim of the project is to create a package for scraping Food prices from supermarkets in Venezuela. This could include functions to get related information, like the official exchange rate. 
+The aim of the project is to create a python scripts that scrapts food prices from the top supermarkets of Caracas, Venezuela and safe the data in a DataBase.
 
 # Installation
 
 # Usage
-```python
-import vfood.main as fs
-
-#Scrape tomate and leche prices as a pd.DataFrame, delete unrelated 
-# results and create a column to show all the 
-# prices in US dollars using the official exchange rate
-df = fs.scrape_prep_data(["tomate","leche"])
-
-#Scrape the official exchange rate a dictionary 
-# with the date, and the source
-exchange_info = fs.bcv_exchange_rate()
-```
+You will need to execute the script to update de Data Base
 
 
 # Roadmap
-* Create tests for development
-* Scrape unofficial exchange rate
+* Make the package a script. 
+* Improve code documentation
+* Test the coe.
+* Create a ignore file.
+* Create a env variables to list the products
+* Connect to a DataBase to safe the data
 
 # Contribution 
-I am not ready for accepting contributions at the moment, but fell free to give feedback.
+I am not ready for accepting contributions at the moment.
 
 # Authors and acknowledgment
 Julio Guerrero is the author of this project, his email is juliodanielguerrero@gmail.com.

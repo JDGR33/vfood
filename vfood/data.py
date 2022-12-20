@@ -3,11 +3,11 @@
 Created on Wed Dec 15 13:57:22 2021
 
 @author: Julio
-"""
-# -----------Check this-------------
-from threading import local
-import time
 
+This is the module for collecting information of food prices.
+"""
+
+import time
 
 # Web Scraping libraries
 from urllib.request import urlopen
@@ -26,7 +26,7 @@ import http.client  # For establishing the number of header
 
 
 # Import utility functions
-from vfood.scrap import (
+from scrap import (
     collect_data_global,
     gama_get_products,
     central_m_get_product,
@@ -36,36 +36,36 @@ http.client._MAXHEADERS = 1000  # Set the limit of headers, more than this will 
 
 
 def add_general_columns(
-    data: pd.DataFrame, local_name: str, search: str
+    data: pd.DataFrame, store_name: str, search_term: str
 ) -> pd.DataFrame:
-    """Add a columns for the current date, the name pass as local_name, and the search_term.
+    """Add a columns for the current date, the name pass as store_name, and the search_term.
 
     Parameters
     ----------
     data : pd.DataFrame
         The pandas DataFrame resulting from scraping the data from a supermarket web page.
 
-    local_name : str
+    store_name : str
         The name of the store.
 
-    search
-        The search team use in the web page search
+    search_term :
+        The name of the prodcut use in the search
 
     Returns
     -------
-    data_new
-        A pandas Data Frame with a column of date (with the value of the current
-        date with %d/%m/%Y format), local_name, and
+    pd.DataFrame :
+        A pandas Data Frame with a column with the column date (with the value of the current
+        date with %d/%m/%Y format), store_name, and
         search_term.
     """
     assert isinstance(data, pd.DataFrame), f"data must be a pandas DataFrame object"
 
     data["date"] = date.today().strftime("%d/%m/%Y")
-    data["store"] = local_name
-    data["search_term"] = search
-    data_new = data
+    data["store"] = store_name
+    data["search_term"] = search_term
+
     assert isinstance(data, pd.DataFrame), f"data must be a pandas DataFrame object"
-    return data_new
+    return data
 
 
 def bcv_exchange_rate() -> dict:
@@ -73,12 +73,13 @@ def bcv_exchange_rate() -> dict:
 
     Returns
     -------
-    data_output : dict
+    dict :
         A dictionary with the current date; the exchange rate as float, and the source
         of the data (BCV).
     """
     url = "http://www.bcv.org.ve/"
 
+    #Create the default information
     data_output = {
         "date": date.today().strftime("%d/%m/%Y"),  # Current date
         "exchange_rate": np.nan,
@@ -89,8 +90,10 @@ def bcv_exchange_rate() -> dict:
     try:
         html = urlopen(url)  # Url of the Central Bank of Venezuela
     except HTTPError as e:
+        print("HTTPError")
+        print("The Exception raised was:")
         print(e)
-        return data_output
+        return data_output 
     except URLError as e:
         print("The server could not be found!")
         return data_output
@@ -110,9 +113,11 @@ def bcv_exchange_rate() -> dict:
         # Convert the exchange rate text to a float
         dollar_text = dollar_boc.get_text().replace(".", "").replace(",", ".")
         exchange_rate = float(dollar_text)
+        assert isinstance(exchange_rate,float),"exchange_rate must be float"
 
-        # Out put dictionary
+        # Update exchange rate dictionary
         data_output.update({"exchange_rate": exchange_rate})
+        assert isinstance(data_output,dict), "data_output must be a dict object"
     return data_output
 
 
@@ -123,17 +128,17 @@ def gama_product_search(product: str) -> pd.DataFrame:
     Parameters
     ----------
     product : str
-        The name of the product to look up.
+        The name of the product to look for.
 
     Returns
     -------
-    df_data : pd.DataFrame
+    pd.DataFrame :
         a DataFrame with information of the product. It has columns for the name
         the price, availability, date, the store name, and the search_term.
 
     """
 
-    # Convert multiple word searches
+    #Prepare product name for the url search
     product_cl = product.strip()  # Strip white spaces
     product = re.sub(
         "\s", "+", product_cl
@@ -143,6 +148,7 @@ def gama_product_search(product: str) -> pd.DataFrame:
     url = (
         "https://gamaenlinea.com/search/?text=" + product
     )  # Url to get the search page of the product
+
     print("-" * 20)
     print(f"Searching {product_cl} in {store_name} Supermarket WegPage")
     print("Trying url  : " + url)
@@ -180,6 +186,7 @@ def gama_product_search(product: str) -> pd.DataFrame:
                 url = (
                     "https://gamaenlinea.com" + page_ref["href"]
                 )  # Link to the new page result
+
                 # Check if the new link was not already open
                 if url not in link_list:
                     link_list.append(url)  # Update list of link already open
@@ -198,17 +205,20 @@ def gama_product_search(product: str) -> pd.DataFrame:
                         assert isinstance(
                             new_gama_products, list
                         ), f"The function gama_get_products() was unavailable to make a product list from thi url: {url}"
+                        
+                        # Add the products of the new page
                         products_information = (
                             products_information + new_gama_products
-                        )  # Add the products of the new page
+                        )  
 
-        # print(products_information)
+        # Convert data to DataFrame format
         df_data = pd.DataFrame(
             products_information,
             columns=["product_name", "product_price", "product_availability"],
-        )  # Convert data to DataFrame format
+        )  
         add_general_columns(df_data, store_name, product_cl)
         assert df_data.shape[1] == 6, f"The DataFrame has extra columns"
+
         return df_data
 
 
@@ -475,7 +485,7 @@ def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
         If no value is given, the exchange rate will be scrape from the BCV web page.
     Return
     ----------
-    prep_data : pd.DataFrame
+    pd.DataFrame :
         It's a Pandas DataFrame of the raw data scrape from the supermarkets web pages
         with out unrelated products and a new column with the price in USA Dollars of
         the product.
@@ -530,3 +540,5 @@ def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
         return process_data
     else:
         print("No Data was found for the list of products.")
+
+scrape_prep_data(['arroz']).to_excel("prueba.xlsx")
