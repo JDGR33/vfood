@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 #----To do list
 # Create .env for database credentials 
 # Create a git ignore
-# Delete commit history
+# Delete commit history ?
 # Truncate decimals of convertion in database and in pandas manipulation
 # Import and use data module
 # Create a .cmd schedule command

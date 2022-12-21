@@ -521,7 +521,7 @@ def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
 
             if "Bs." in price_text:
                 price = float(price_text.replace("Bs.", "").strip())
-                price = price / rate_bs_dollar
+                price = round(price / rate_bs_dollar,2)
                 return price
             elif "$" in price_text:
                 price = float(price_text.replace("$", "").strip())
@@ -541,4 +541,4 @@ def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
     else:
         print("No Data was found for the list of products.")
 
-scrape_prep_data(['arroz']).to_excel("prueba.xlsx")
+scrape_prep_data(['arroz']).to_excel("test_data.xlsx")
