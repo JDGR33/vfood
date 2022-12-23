@@ -540,5 +540,3 @@ def scrape_prep_data(products: list, exchange_rate=None) -> pd.DataFrame:
         return process_data
     else:
         print("No Data was found for the list of products.")
-
-scrape_prep_data(['arroz']).to_excel("test_data.xlsx")

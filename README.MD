@@ -11,12 +11,8 @@ You will need to execute the script to update de Data Base
 
 
 # Roadmap
-* Make the package a script. 
-* Improve code documentation
-* Test the coe.
-* Create a ignore file.
-* Create a env variables to list the products
-* Connect to a DataBase to safe the data
+* improve update_db.py comments
+* create a database to safe the price of the dollar
 
 # Contribution 
 I am not ready for accepting contributions at the moment.
