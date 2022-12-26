@@ -1,0 +1,6 @@
+Starting Script at Fri 12/23/2022  7:38:57.50 
+['huevo']
+finished at Fri 12/23/2022  7:40:20.11 
+Starting Script at Mon 12/26/2022 18:59:12.50 
+['huevo', 'pollo', 'carne', 'pasta', 'garbanzo', 'arroz', 'leche', 'papa', 'tomate', 'pasata', 'pepsi', 'cocacola', 'natuchip', 'chocolate']
+finished at Mon 12/26/2022 19:05:06.49 
