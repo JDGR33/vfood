@@ -26,7 +26,7 @@ I am not ready to accept contributions at the moment.
 # Authors and acknowledgment
 Julio Guerrero is the author of this project, his email is juliodanielguerrero@gmail.com.
 
-Special thanks to Gabriel Velasquez for given me the idea for this project.
+Special thanks to Gabriel Velasquez and Nicole Pineda for given me the idea for this project.
 
 # License
 
