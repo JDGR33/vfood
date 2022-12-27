@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 15 13:57:22 2021
+
+@author: Julio
+
+This module is for scarping the DataFrom  the Websites of the SupperMarkets
+
+"""
+
 # Web Scraping libraries
 from urllib.request import urlopen
 from bs4 import BeautifulSoup

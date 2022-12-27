@@ -1,0 +1,6 @@
+SET logfile="path_to_log_file"
+@echo off
+@echo Starting Script at %date% %time% >> %logfile%
+cd path_to_the_project_directory
+path_to_python_env\python.exe path_to_the_project_directory\vfood\update_db.py
+@echo finished at %date% %time% >> %logfile%

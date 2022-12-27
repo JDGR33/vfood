@@ -1,0 +1,4 @@
+USER="your_user_name"
+PASSWORD="your_password"
+HOST="database_host"
+PORT="database_port"

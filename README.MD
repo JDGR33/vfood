@@ -2,37 +2,44 @@
 
 # Description
 
-The aim of the project is to create a package for scraping Food prices from supermarkets in Venezuela. This could include functions to get related information, like the official exchange rate. 
+The aim of the project is to create a python script that scrapes food prices from the top supermarkets of Caracas, Venezuela and loads the data in a database.
 
-# Installation
+Currently, I am scraping the data each day running a .bat file with Task Scheduler on my Windows PC and loading the data to a Postgres database that is locally hosted. 
+
+The test_data.csv is a sample of the database that gives you an idea of how the database looks. In my experience the search results of the supermarkets' web pages are bad, so many unrelated products show up. Even dough the script filters out products that have no similarity with the product begin scrape, the data collected is raw and downstream process may need to clean it to fit its goals. 
+
+For example, if you scrape prices for “egg” (huevo in Spanish) you will have results like “egg pasta” (pasta de huevo).
+
+In the future, I will deploy this project in a Linux server that will run the automation in a cron job and will host the Data Base.
+
+If you want to run this automation yourself, you will need to create your own .bat to run the automation and your own .env with your Postgres credentials.
+
+## Exchange Rates in Venezuela
+
+Some supermarkets provide prices in the local currency (Bolivares) and others in US Dollars. Because the US Dollar is widely used in Venezuela for payment I decided to include a column with the prices converting the Prices from Bolivares to US Dollars using the scraped official exchange rate from Venezuela´s Central Bank Web Page. 
+
+The exchange rate in Venezuela is a complicated topic, especially if you don´t live in the country. The water-down explanation is that there are two exchange rates: the official exchange rate (published by Venezuela´s Central Bank) and the unofficial exchange rate. These two can differ some weeks and businesses may prefer one over the other.
+
 
 # Usage
-```python
-import vfood.main as fs
+If you want to use this code you will need to create a virtual environment with the dependencies of the requirements.txt.
 
-#Scrape tomate and leche prices as a pd.DataFrame, delete unrelated 
-# results and create a column to show all the 
-# prices in US dollars using the official exchange rate
-df = fs.scrape_prep_data(["tomate","leche"])
+Then you need to create a `.env` file with the credentials for your Postgres SQL database. For security reasons I don’t share mine in this repository but you can use `env_example.txt` as a template for yours. If you want to use another relational database management system, you will need to modify the `update_a_db` function in the `update_db.py` module. Remember that is the main file that runs the automation.
 
-#Scrape the official exchange rate a dictionary 
-# with the date, and the source
-exchange_info = fs.bcv_exchange_rate()
-```
+If you want to add or remove products, you can do it by changing `food.csv` in `ref_table`.
 
+If you want to run the script in a schedule, I left an example of the batch file I am running and the log file it updates. If you have Windows you will want to take a look at how to setup up a Task in Task Scheduler and if you are running Linux you want to take a look at Cron jobs. 
 
 # Roadmap
-* Create tests for development
-* Scrape unofficial exchange rate
-
-# Contribution 
-I am not ready for accepting contributions at the moment, but fell free to give feedback.
+* I want python to send me a Report via Telegram when the scraping is over.
+* I want to scrape the official exchange rate 3 times every day and save the data in a second database.
+* I want to deploy the project on a Linux server.
 
 # Authors and acknowledgment
 Julio Guerrero is the author of this project, his email is juliodanielguerrero@gmail.com.
 
-Special thanks to Gabriel Velasquez for given me the idea for this project.
+Special thanks to Gabriel Velasquez and Nicole Pineda for giving me the idea for this project.
 
 # License
 
-This project was made with a MIT license, for more information read the LICENSE file.
+This project was done with an MIT license, for more information read the LICENSE file.

@@ -1,0 +1,5 @@
+.env
+__pycache__
+*.bat
+*.log
+ver.csv
