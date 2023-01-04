@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 # local modules
 import data 
+import message
 
 
 def update_a_db(data:pd.DataFrame,user:str,password:str,host:str,port:str,db_name:str,table_name:str):
@@ -110,3 +111,10 @@ if __name__ == "__main__":
     #Log the foods that where scrap
     log_file = os.path.join(cwd,'batch.log')
     log_food(str(food_list),log_file)
+
+    #Send a message informing the end of the Scrape
+    exchange_rate = data.bcv_exchange_rate()['exchange_rate']
+    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$"
+    message_txt = message.create_message(food_list,exchange_rate_msm)
+    print(message_txt)
+    message.telegram_message(message_txt,)
