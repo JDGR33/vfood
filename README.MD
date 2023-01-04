@@ -6,7 +6,16 @@ The aim of the project is to create a python script that scrapes food prices fro
 
 Currently, I am scraping the data each day running a .bat file with Task Scheduler on my Windows PC and loading the data to a Postgres database that is locally hosted. 
 
-The test_data.csv is a sample of the database that gives you an idea of how the database looks. In my experience the search results of the supermarkets' web pages are bad, so many unrelated products show up. Even dough the script filters out products that have no similarity with the product begin scrape, the data collected is raw and downstream process may need to clean it to fit its goals. 
+The test_data.csv is a sample of the database that gives you an idea of how the database looks. In my experience the search results of the supermarkets' web pages are bad, so many unrelated products show up. Even dough the script filters out products that have no similarity with the product begin scrape, the data collected is raw and downstream process may need to clean it to fit its goals.
+
+If you want to send messages via Telegram bot, you will first need to:
+1. Create one using BotFather
+2. Get its `Token`
+3. Message the bot
+4. Get the `Chat ID` of your Chat with it
+5. Add the `Token` and `Chat ID` to `.env` (see `env_example.txt`)
+
+For a step-step guide see [this Article](https://medium.com/codex/using-python-to-send-telegram-messages-in-3-simple-steps-419a8b5e5e2)
 
 For example, if you scrape prices for “egg” (huevo in Spanish) you will have results like “egg pasta” (pasta de huevo).
 
