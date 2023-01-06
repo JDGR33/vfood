@@ -6,6 +6,8 @@ The aim of the project is to create a python script that scrapes food prices fro
 
 Currently, I am scraping the data each day running a .bat file with Task Scheduler on my Windows PC and loading the data to a Postgres database that is locally hosted. 
 
+The list of food prices is scraped once a Day and the exchange rate 4 times a day.
+
 The test_data.csv is a sample of the database that gives you an idea of how the database looks. In my experience the search results of the supermarkets' web pages are bad, so many unrelated products show up. Even dough the script filters out products that have no similarity with the product begin scrape, the data collected is raw and downstream process may need to clean it to fit its goals.
 
 If you want to send messages via Telegram bot, you will first need to:
@@ -33,7 +35,7 @@ The exchange rate in Venezuela is a complicated topic, especially if you don´t 
 # Usage
 If you want to use this code you will need to create a virtual environment with the dependencies of the requirements.txt.
 
-Then you need to create a `.env` file with the credentials for your Postgres SQL database. For security reasons I don’t share mine in this repository but you can use `env_example.txt` as a template for yours. If you want to use another relational database management system, you will need to modify the `update_a_db` function in the `update_db.py` module. Remember that is the main file that runs the automation.
+Then you need to create a `.env` file with the credentials for your Postgres SQL database. For security reasons I don’t share mine in this repository but you can use `env_example.txt` as a template for yours. If you want to use another relational database management system, you will need to modify the `update_a_db` function in the `update_db.py` module.
 
 If you want to add or remove products, you can do it by changing `food.csv` in `ref_table`.
 

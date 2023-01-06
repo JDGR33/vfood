@@ -52,6 +52,26 @@ def prepare_food_data(scrapt_food_data:pd.DataFrame)->pd.DataFrame:
     #print(scrapt_food_data.head())
     return scrapt_food_data
 
+def prepare_bcv_data(raw_bcv_data:dict)->pd.DataFrame:
+    """Prepare the raw data from the bcv for the table in the database
+
+    Parameters:
+    -----------
+    raw_bcv_data : dict
+        The result of scraping the exchange rate from the bcv
+     
+    Returns:
+    --------
+    pd.DataFrame
+        A clean DataFrame ready to be loaded to the data base
+    """
+    for k, v in raw_bcv_data.items():
+        raw_bcv_data[k]=[v]
+
+    rate_bcv = pd.DataFrame.from_dict(raw_bcv_data)[['date','exchange_rate','source']]
+    rate_bcv = rate_bcv.rename(columns={'date':'datetime','exchange_rate':'rate',"source":"nmae"})
+    return(rate_bcv)
+
 def get_list_foods(path:str)->list:
     """Get the list of food to scrap.
     Parameters:
@@ -94,14 +114,9 @@ def update_exchange():
     db_name = "price_scrapt"
     table_name = "exchange"
 
+    #Get raw data from the bcv and preparing it for the Database
     rate_raw =data.bcv_exchange_rate()
-    
-    for k, v in rate_raw.items():
-        rate_raw[k]=[v]
-
-    rate_bcv = pd.DataFrame.from_dict(rate_raw)[['date','exchange_rate','source']]
-    rate_bcv = rate_bcv.rename(columns={'date':'datetime','exchange_rate':'rate',"source":"nmae"})
-
+    rate_bcv = prepare_bcv_data(rate_raw)
     print(rate_bcv)
 
     # Update food Table in the DataBase
