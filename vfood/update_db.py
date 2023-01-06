@@ -107,43 +107,52 @@ def update_exchange():
     # Update food Table in the DataBase
     update_a_db(rate_bcv,USER,PASSWORD,HOST,PORT,db_name,table_name)
 
+    #Send a message informing the end of the Scrape
+    exchange_rate = data.bcv_exchange_rate()['exchange_rate']
+    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$"
+    print(exchange_rate_msm)
+    message.telegram_message(exchange_rate_msm,)
 
-if __name__ == "__main__":
-    # cwd = os.getcwd()
+def update_foods():
+    """Scrape the list of foods and update the table in the DataBase."""
+
+    cwd = os.getcwd()
     
-    # #Get the list of foods to scrap
-    # food_list_path = os.path.join(cwd,'ref_table','foods.csv')
-    # food_list = get_list_foods(food_list_path)
+    #Get the list of foods to scrap
+    food_list_path = os.path.join(cwd,'ref_table','foods.csv')
+    food_list = get_list_foods(food_list_path)
 
-    # #Scrap the list of foods
-    # scrap_data = data.scrape_prep_data(food_list)
-    # scrap_data.to_csv("test_data.csv")
+    #Scrap the list of foods
+    scrap_data = data.scrape_prep_data(food_list)
+    scrap_data.to_csv("test_data.csv")
 
-    # #Prepare the scrap data for the DataBase Table
-    # scrap_data = prepare_food_data(scrap_data)
+    #Prepare the scrap data for the DataBase Table
+    scrap_data = prepare_food_data(scrap_data)
 
-    # #Get DataBase credentials from a .env
-    # load_dotenv()
-    # USER = os.getenv("USER")
-    # PASSWORD = os.getenv("PASSWORD")
-    # HOST = os.getenv("HOST")
-    # PORT = os.getenv("PORT")
+    #Get DataBase credentials from a .env
+    load_dotenv()
+    USER = os.getenv("USER")
+    PASSWORD = os.getenv("PASSWORD")
+    HOST = os.getenv("HOST")
+    PORT = os.getenv("PORT")
 
-    # # Table and DataBase name to safe the scrap food data
-    # db_name = "price_scrapt"
-    # table_name = "food"
+    # Table and DataBase name to safe the scrap food data
+    db_name = "price_scrapt"
+    table_name = "food"
 
-    # # Update food Table in the DataBase
-    # update_a_db(scrap_data,USER,PASSWORD,HOST,PORT,db_name,table_name)
+    # Update food Table in the DataBase
+    update_a_db(scrap_data,USER,PASSWORD,HOST,PORT,db_name,table_name)
 
-    # #Log the foods that where scrap
-    # log_file = os.path.join(cwd,'batch.log')
-    # log_food(str(food_list),log_file)
+    #Log the foods that where scrap
+    log_file = os.path.join(cwd,'batch.log')
+    log_food(str(food_list),log_file)
 
-    # #Send a message informing the end of the Scrape
-    # exchange_rate = data.bcv_exchange_rate()['exchange_rate']
-    # exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$"
-    # message_txt = message.create_message(food_list,exchange_rate_msm)
-    # print(message_txt)
-    # message.telegram_message(message_txt,)
-    update_exchange()
+    #Send a message informing the end of the Scrape
+    exchange_rate = data.bcv_exchange_rate()['exchange_rate']
+    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$"
+    message_txt = message.create_message_food   (food_list,exchange_rate_msm)
+    print(message_txt)
+    message.telegram_message(message_txt,)
+
+# if __name__ == "__main__":
+#     update_foods()

@@ -32,7 +32,7 @@ def telegram_message(message:str):
     except Exception as e:
         print("Error trying to send Telegram message"+str(Exception))
 
-def create_message(foods:list,*argv)->str:
+def create_message_food(foods:list,*argv)->str:
     """Create the text to be send with the foods that where scrape
     
     Parameters
@@ -50,7 +50,7 @@ def create_message(foods:list,*argv)->str:
     """
 
     dt_string = datetime.now().strftime("%Y-%m-%d %H:%M")
-    message = f"At {dt_string} this foods where scraped:"
+    message = f"At {dt_string} these foods were scraped:"
     #Make a list of all the foods in the message
     for food in foods:
         message = message +f"\n• {food}"
@@ -59,7 +59,7 @@ def create_message(foods:list,*argv)->str:
     if len(argv)>0:
         message = message + "\n\n Extra information"
         for arg in argv:
-            message = message + "\n•"+str(arg)
+            message = message + "\n• "+str(arg)
     
     assert isinstance(message,str)
 
