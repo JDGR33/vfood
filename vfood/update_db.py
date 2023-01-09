@@ -69,7 +69,7 @@ def prepare_bcv_data(raw_bcv_data:dict)->pd.DataFrame:
         raw_bcv_data[k]=[v]
 
     rate_bcv = pd.DataFrame.from_dict(raw_bcv_data)[['date','exchange_rate','source']]
-    rate_bcv = rate_bcv.rename(columns={'date':'datetime','exchange_rate':'rate',"source":"nmae"})
+    rate_bcv = rate_bcv.rename(columns={'date':'datetime','exchange_rate':'rate',"source":"name"})
     return(rate_bcv)
 
 def get_list_foods(path:str)->list:

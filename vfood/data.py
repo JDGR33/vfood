@@ -27,7 +27,7 @@ import http.client  # For establishing the number of header
 
 
 # Import utility functions
-from scrap import (
+from scrape import (
     collect_data_global,
     gama_get_products,
     central_m_get_product,
