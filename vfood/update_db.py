@@ -52,13 +52,16 @@ def prepare_food_data(scrapt_food_data:pd.DataFrame)->pd.DataFrame:
     #print(scrapt_food_data.head())
     return scrapt_food_data
 
-def prepare_bcv_data(raw_bcv_data:dict)->pd.DataFrame:
+def prepare_bcv_data(raw_bcv_data:dict,rename={'date':'datetime','exchange_rate':'rate',"source":"nmae"})->pd.DataFrame:
     """Prepare the raw data from the bcv for the table in the database
 
     Parameters:
     -----------
     raw_bcv_data : dict
         The result of scraping the exchange rate from the bcv
+
+    rename : dict
+        For renaming the columns
      
     Returns:
     --------
@@ -69,7 +72,7 @@ def prepare_bcv_data(raw_bcv_data:dict)->pd.DataFrame:
         raw_bcv_data[k]=[v]
 
     rate_bcv = pd.DataFrame.from_dict(raw_bcv_data)[['date','exchange_rate','source']]
-    rate_bcv = rate_bcv.rename(columns={'date':'datetime','exchange_rate':'rate',"source":"name"})
+    rate_bcv = rate_bcv.rename(columns=rename)
     return(rate_bcv)
 
 def get_list_foods(path:str)->list:
