@@ -113,8 +113,8 @@ def last_exchange_monitor(tweets:tweepy.Response)->str:
 
     for tweet in tweets.data:
         if check_monitor_data(tweet.text): #Check if the tweet has exchange rate information
-            print(tweet.text)
-            print(type(tweet))
+            # print(tweet.text)
+            # print(type(tweet))
             r = tweet
             break
     return r
@@ -149,4 +149,4 @@ def exchange_from_tw_user(user:str)->dict:
 
     return data
 
-print(exchange_from_tw_user("monitordolarvla"))
+#print(exchange_from_tw_user("monitordolarvla"))

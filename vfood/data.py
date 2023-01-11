@@ -83,7 +83,7 @@ def bcv_exchange_rate() -> dict:
     #Create the default information
     data_output = {
         #"date": date.today().strftime("%d/%m/%Y "),  # Current date
-        "date":datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        "date":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "exchange_rate": np.nan,
         "exchange": "Bs./$",
         "source": "BCV",

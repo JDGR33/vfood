@@ -156,12 +156,13 @@ def update_exchange():
     update_a_db(pd.concat([rate_bcv,rate_tw]),USER,PASSWORD,HOST,PORT,db_name,table_name)
 
     #Send a message informing the end of the Scrape
-    exchange_rate = rate_bcv_r['exchange_rate']
+    exchange_rate = rate_bcv_r['exchange_rate'][0]
     exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$ for the BCV"
 
     #Information form Twitter
     exchange_rate = rate_tw_r['rate'][0]
-    exchange_rate_msm = exchange_rate_msm + f"\nThe exchange rate is {exchange_rate} Bs./$ for the monitordolarvla"
+    date_exchange = rate_tw_r['date'][0]
+    exchange_rate_msm = exchange_rate_msm + f"\nThe exchange rate is {exchange_rate} Bs./$ for the monitordolarvla {date_exchange}"
 
     print(exchange_rate_msm)
     message.telegram_message(exchange_rate_msm,)
