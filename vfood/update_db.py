@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 # local modules
 import data 
 import message
+from exchange_tw import exchange_from_tw_user
 
 
 def update_a_db(data:pd.DataFrame,user:str,password:str,host:str,port:str,db_name:str,table_name:str):
@@ -75,6 +76,30 @@ def prepare_bcv_data(raw_bcv_data:dict,rename={'date':'datetime','exchange_rate'
     rate_bcv = rate_bcv.rename(columns=rename)
     return(rate_bcv)
 
+def prepare_tw_data(raw_tweet_data:dict,rename={'date':'datetime','rate':'rate',"name":"nmae"})->pd.DataFrame:
+    """Prepare the raw data from the bcv for the table in the database
+
+    Parameters:
+    -----------
+    raw_tweet_data : dict
+        The result of scraping the exchange rate from the tweets
+
+    rename : dict
+        For renaming the columns
+     
+    Returns:
+    --------
+    pd.DataFrame
+        A clean DataFrame ready to be loaded to the data base
+    """
+    for k, v in raw_tweet_data.items():
+        raw_tweet_data[k]=[v]
+    
+    keep_col =['date','rate','name']
+    rate_tw = pd.DataFrame.from_dict(raw_tweet_data)[keep_col]
+    rate_tw = rate_tw.rename(columns=rename)
+    return(rate_tw)
+
 def get_list_foods(path:str)->list:
     """Get the list of food to scrap.
     Parameters:
@@ -118,16 +143,26 @@ def update_exchange():
     table_name = "exchange"
 
     #Get raw data from the bcv and preparing it for the Database
-    rate_raw =data.bcv_exchange_rate()
-    rate_bcv = prepare_bcv_data(rate_raw)
+    rate_bcv_r =data.bcv_exchange_rate()
+    rate_bcv = prepare_bcv_data(rate_bcv_r)
     print(rate_bcv)
 
+    #Get raw data from the Twitter and preparing it for the Database
+    rate_tw_r = exchange_from_tw_user("monitordolarvla")
+    rate_tw = prepare_tw_data(rate_tw_r)
+    print(rate_tw)
+
     # Update food Table in the DataBase
-    update_a_db(rate_bcv,USER,PASSWORD,HOST,PORT,db_name,table_name)
+    update_a_db(pd.concat([rate_bcv,rate_tw]),USER,PASSWORD,HOST,PORT,db_name,table_name)
 
     #Send a message informing the end of the Scrape
-    exchange_rate = data.bcv_exchange_rate()['exchange_rate']
-    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$"
+    exchange_rate = rate_bcv_r['exchange_rate']
+    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$ for the BCV"
+
+    #Information form Twitter
+    exchange_rate = rate_tw_r['rate'][0]
+    exchange_rate_msm = exchange_rate_msm + f"\nThe exchange rate is {exchange_rate} Bs./$ for the monitordolarvla"
+
     print(exchange_rate_msm)
     message.telegram_message(exchange_rate_msm,)
 

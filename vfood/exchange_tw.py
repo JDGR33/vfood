@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import re
 from datetime import datetime
+from dateutil import tz
 
 
 
@@ -83,18 +84,16 @@ def get_monitor_data(tweet_txt:str)->float:
         The exchange rate from the tweet
     """
 
-
-    data={}
+    assert tweet_txt !=""
 
     expression ="💵\s*Bs\.?\s*(\d+[,.]\d+)" #💵, zero or more  of white Spaces, "Bs", a possible dot,zero or more of white Spaces,one or more numbers, either the comma or dot characters, and one or more numbers ////
    
     rate = re.search(expression,tweet_txt).group(1)#Find the regular expression and get the group with the rate rate float
     rate = rate.replace(",",".")#Replace the comma for a dot 
     rate = float(rate) #Convert to float
-    print(rate)
-    data['exchange']=rate
+    #print(rate)
     
-    return data
+    return rate
     
 def last_exchange_monitor(tweets:tweepy.Response)->str:
     """Get the first tweet with exchange Rate Information
@@ -140,8 +139,11 @@ def exchange_from_tw_user(user:str)->dict:
     if user == "monitordolarvla":
         last_tw =(last_exchange_monitor(tweets)) #Get latest exchange rate tweet
         data['rate'] = get_monitor_data(last_tw.text) #Get the exchange rate from the tweet
+    else:
+        assert True, "Username does not have a scraping function"
 
-    data['date'] = last_tw.created_at #Datetime of the tweet 
+    
+    data['date'] = last_tw.created_at.astimezone(tz.tzlocal()) #Datetime of the tweet 
     data['name'] = user #Username
     data['tweet'] = last_tw.text #Raw text from the tweet
 
