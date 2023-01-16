@@ -167,7 +167,7 @@ def update_exchange():
     
     #print("create exchange rate message")
     exchange_rate_msm =message.create_message_exchange([rate_bcv_r,rate_tw_r])
-    
+
     print(exchange_rate_msm)
     message.telegram_message(exchange_rate_msm,)
 
@@ -207,7 +207,8 @@ def update_foods():
 
     #Send a message informing the end of the Scrape
     exchange_rate = data.bcv_exchange_rate()['exchange_rate']
-    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$"
+    source = data.bcv_exchange_rate()['source']
+    exchange_rate_msm = f"The exchange rate is *{exchange_rate}* Bs./$ according  to the *{source}*"
     message_txt = message.create_message_food   (food_list,exchange_rate_msm)
     print(message_txt)
     message.telegram_message(message_txt,)
