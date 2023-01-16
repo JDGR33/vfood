@@ -76,7 +76,7 @@ def prepare_bcv_data(raw_bcv_data:dict,rename={'date':'datetime','exchange_rate'
     rate_bcv = rate_bcv.rename(columns=rename)
     return(rate_bcv)
 
-def prepare_tw_data(raw_tweet_data:dict,rename={'date':'datetime','rate':'rate',"name":"nmae"})->pd.DataFrame:
+def prepare_tw_data(raw_tweet_data:dict,rename={'date':'datetime','exchange_rate':'rate',"source":"nmae"})->pd.DataFrame:
     """Prepare the raw data from the bcv for the table in the database
 
     Parameters:
@@ -95,7 +95,7 @@ def prepare_tw_data(raw_tweet_data:dict,rename={'date':'datetime','rate':'rate',
     for k, v in raw_tweet_data.items():
         raw_tweet_data[k]=[v]
     
-    keep_col =['date','rate','name']
+    keep_col =['date','exchange_rate','source']
     rate_tw = pd.DataFrame.from_dict(raw_tweet_data)[keep_col]
     rate_tw = rate_tw.rename(columns=rename)
     return(rate_tw)
@@ -156,14 +156,18 @@ def update_exchange():
     update_a_db(pd.concat([rate_bcv,rate_tw]),USER,PASSWORD,HOST,PORT,db_name,table_name)
 
     #Send a message informing the end of the Scrape
-    exchange_rate = rate_bcv_r['exchange_rate'][0]
-    exchange_rate_msm = f"The exchange rate is {exchange_rate} Bs./$ for the BCV"
+    # exchange_rate = rate_bcv_r['exchange_rate'][0]
+    # exchange_rate_msm = "💵Exchange Rate Report:"
+    # exchange_rate_msm = exchange_rate_msm + f"\n\t•The exchange rate is {exchange_rate} Bs/$ according to BCV"
 
-    #Information form Twitter
-    exchange_rate = rate_tw_r['rate'][0]
-    date_exchange = rate_tw_r['date'][0]
-    exchange_rate_msm = exchange_rate_msm + f"\nThe exchange rate is {exchange_rate} Bs./$ for the monitordolarvla {date_exchange}"
-
+    # #Information form Twitter
+    # exchange_rate = rate_tw_r['rate'][0]
+    # date_exchange = rate_tw_r['date'][0].strftime("%Y-%m-%d %H:%M:%S")
+    # exchange_rate_msm = exchange_rate_msm + f"\n\t•The exchange rate is {exchange_rate} Bs/$ according to monitordolarvla {date_exchange}"
+    
+    #print("create exchange rate message")
+    exchange_rate_msm =message.create_message_exchange([rate_bcv_r,rate_tw_r])
+    
     print(exchange_rate_msm)
     message.telegram_message(exchange_rate_msm,)
 
@@ -207,6 +211,3 @@ def update_foods():
     message_txt = message.create_message_food   (food_list,exchange_rate_msm)
     print(message_txt)
     message.telegram_message(message_txt,)
-
-# if __name__ == "__main__":
-#     update_foods()

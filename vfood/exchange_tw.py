@@ -5,8 +5,6 @@ import re
 from datetime import datetime
 from dateutil import tz
 
-
-
 def create_tw_client():
     """Create a tweepy.Client object
     
@@ -138,15 +136,13 @@ def exchange_from_tw_user(user:str)->dict:
     data = {}
     if user == "monitordolarvla":
         last_tw =(last_exchange_monitor(tweets)) #Get latest exchange rate tweet
-        data['rate'] = get_monitor_data(last_tw.text) #Get the exchange rate from the tweet
+        data['exchange_rate'] = get_monitor_data(last_tw.text) #Get the exchange rate from the tweet
     else:
         assert True, "Username does not have a scraping function"
 
     
     data['date'] = last_tw.created_at.astimezone(tz.tzlocal()) #Datetime of the tweet 
-    data['name'] = user #Username
+    data['source'] = user #Username
     data['tweet'] = last_tw.text #Raw text from the tweet
 
     return data
-
-#print(exchange_from_tw_user("monitordolarvla"))

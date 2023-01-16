@@ -50,30 +50,58 @@ def create_message_food(foods:list,*argv)->str:
     """
 
     dt_string = datetime.now().strftime("%Y-%m-%d %H:%M")
-    message = f"At {dt_string} these foods were scraped:"
+
+    message = f"📊 At {dt_string} these foods were scraped:"
     #Make a list of all the foods in the message
     for food in foods:
-        message = message +f"\n• {food}"
+        message = message +f"\n\t• {food}"
 
     #Ads extra information at the end of the Message
     if len(argv)>0:
-        message = message + "\n\n Extra information"
+        message = message + "\n\n⁉Extra information"
         for arg in argv:
-            message = message + "\n• "+str(arg)
+            message = message + "\n\t• "+str(arg)
     
     assert isinstance(message,str)
 
     return message
 
-# ------ For Testing
-#import update_db
-# if __name__ == "__main__":
-#     cwd = os.getcwd()
+def create_message_exchange(rates_data:list)->str:
+    """Create a Telegram message with the data of all the exchange rates.
     
-#     #Get the list of foods to scrap
-#     food_list_path = os.path.join(cwd,'ref_table','foods.csv')
-#     food_list = update_db.get_list_foods(food_list_path)
+    Parameters :
+    ------------
+    rates_data : list
+        A list of dictionaries with the information for each exchange rate.
 
-#     message = create_message(food_list,"El precio del dolar es 34","No se ha encontrado forma de procesar los datos")
-#     print(message)
-#     telegram_message(message)
+    
+    Returns :
+    ---------
+    str :
+        The Telegram message    
+    """
+
+    if len(rates_data)<1:
+        raise ValueError("rates_data must have at lest 1 element.")
+
+    
+    message = "💵Exchange Rate Report:"
+    for rate_data in rates_data:
+        
+        if not(isinstance(rate_data,dict)):
+            raise TypeError("One of the elements is not a dict.")
+
+        exchange_rate = rate_data['exchange_rate'][0]
+        date_exchange = rate_data['date'][0].strftime("%Y-%m-%d %H:%M")
+        source = rate_data['source'][0]
+        
+        message = message + f"\n\t•The exchange rate is {exchange_rate} Bs/$ according to {source} at {date_exchange}"
+    
+    print(message)
+
+    return(message)
+        
+
+
+
+
