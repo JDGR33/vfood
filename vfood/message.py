@@ -40,15 +40,15 @@ def telegram_message(message:str,mk=True):
         print("Error trying to send Telegram message"+str(Exception))
 
 def create_message_food(foods:list,*argv)->str:
-    """Create the text to be send with the foods that where scrape
+    """Create the text to be send with the foods from the scraping
     
     Parameters
     ----------
     foods : list
-        The list of foods that where scrape.
+        The list of foods from the scraping
 
     *argv 
-        Extra strings that will message will have.
+        Extra strings that the message will have.
 
     Returns
     -------
@@ -109,16 +109,16 @@ def create_message_exchange(rates_data:list)->str:
     return(message)
         
 def prep_message_mk(og_txt:str)->str:
-    """Prepare a string for Telegram Markdown parser.
+    """Clean a string for Telegram Markdown parser.
     
     Parameters :
     ------------
     og_txt : str
-        The string to prepare
+        The string to clean
 
     Returns :
     ---------
-    A string for Telegram Markdown parser.
+        Clean string for Telegram Markdown parser.
     """
     special_chrs = ['\[', '\]', '\(', '\)','>', '#', '\+', '-', '=', '\{', '\}', '\.', '!']
 
@@ -129,10 +129,3 @@ def prep_message_mk(og_txt:str)->str:
         print(chr)
 
     return og_txt
-
-# #txt = prep_message_mk("[_*[]()~`>#+-=|{}.!,]")
-# telegram_message("[_*[]()~`>#+-=|{}.!,]")
-
-
-
-

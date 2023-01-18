@@ -138,7 +138,7 @@ def update_exchange():
     HOST = os.getenv("HOST")
     PORT = os.getenv("PORT")
 
-    # Table and DataBase name to safe the scrap exchange Rate of the bcv
+    # Table and DataBase name to safe the scrape exchange Ratesr
     db_name = "price_scrapt"
     table_name = "exchange"
 
@@ -155,17 +155,7 @@ def update_exchange():
     # Update food Table in the DataBase
     update_a_db(pd.concat([rate_bcv,rate_tw]),USER,PASSWORD,HOST,PORT,db_name,table_name)
 
-    #Send a message informing the end of the Scrape
-    # exchange_rate = rate_bcv_r['exchange_rate'][0]
-    # exchange_rate_msm = "💵Exchange Rate Report:"
-    # exchange_rate_msm = exchange_rate_msm + f"\n\t•The exchange rate is {exchange_rate} Bs/$ according to BCV"
-
-    # #Information form Twitter
-    # exchange_rate = rate_tw_r['rate'][0]
-    # date_exchange = rate_tw_r['date'][0].strftime("%Y-%m-%d %H:%M:%S")
-    # exchange_rate_msm = exchange_rate_msm + f"\n\t•The exchange rate is {exchange_rate} Bs/$ according to monitordolarvla {date_exchange}"
-    
-    #print("create exchange rate message")
+    #Send a message informing the end of the Scraping
     exchange_rate_msm =message.create_message_exchange([rate_bcv_r,rate_tw_r])
 
     print(exchange_rate_msm)
