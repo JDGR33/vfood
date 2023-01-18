@@ -6,25 +6,40 @@ The aim of the project is to create a python script that scrapes food prices fro
 
 Currently, I am scraping the data each day running a .bat file with Task Scheduler on my Windows PC and loading the data to a Postgres database that is locally hosted. 
 
-The test_data.csv is a sample of the database that gives you an idea of how the database looks. In my experience the search results of the supermarkets' web pages are bad, so many unrelated products show up. Even dough the script filters out products that have no similarity with the product begin scrape, the data collected is raw and downstream process may need to clean it to fit its goals. 
+The list of food prices is scraped once a Day and the exchange rate 2 times a day.
+
+The test_data.csv is a sample of the database and gives you an idea of how the database looks. In my experience the search results of the supermarkets' web pages are bad, so many unrelated products show up. Even dough the script filters out products that don't have the search term, the data collected is raw and downstream process may need to clean it to fit its goals.
 
 For example, if you scrape prices for “egg” (huevo in Spanish) you will have results like “egg pasta” (pasta de huevo).
 
+I use Telegram Bot API to send a message to myself every time the scraping is finished. I also used Twitter API to scrape the "unofficial" exchange rate from a Twitter user.
+
+If you want to send messages via Telegram bot, you will first need to:
+1. Create one using BotFather
+2. Get its `Token`
+3. Message the bot
+4. Get the `Chat ID` of your Chat with it
+5. Add the `Token` and `Chat ID` to `.env` (see `env_example.txt`)
+
+For a step-step guide see [this Article](https://medium.com/codex/using-python-to-send-telegram-messages-in-3-simple-steps-419a8b5e5e2)
+
+The process of getting access to Twitter API is more complicated and plenty of information is available on their Website.
+
 In the future, I will deploy this project in a Linux server that will run the automation in a cron job and will host the Data Base.
 
-If you want to run this automation yourself, you will need to create your own .bat to run the automation and your own .env with your Postgres credentials.
+If you want to run this automation yourself, you will need to create your own .bat to run the automation and your own .env with your Postgres credentials, Telegram Bot credentials, and Twitter API credentials.
 
 ## Exchange Rates in Venezuela
 
-Some supermarkets provide prices in the local currency (Bolivares) and others in US Dollars. Because the US Dollar is widely used in Venezuela for payment I decided to include a column with the prices converting the Prices from Bolivares to US Dollars using the scraped official exchange rate from Venezuela´s Central Bank Web Page. 
+Some supermarkets provide prices in the local currency (Bolivares) and others in US Dollars. Because the US Dollar is widely used in Venezuela for payment I decided to include a column with the prices converting the Prices from Bolivares to US Dollars using the official exchange rate from Venezuela´s Central Bank Web Page. 
 
-The exchange rate in Venezuela is a complicated topic, especially if you don´t live in the country. The water-down explanation is that there are two exchange rates: the official exchange rate (published by Venezuela´s Central Bank) and the unofficial exchange rate. These two can differ some weeks and businesses may prefer one over the other.
+The exchange rate in Venezuela is a complicated topic, especially if you don´t live in the country. The water-down explanation is that there are two exchange rates: the official exchange rate (published by Venezuela´s Central Bank) and the unofficial exchange rate (publish in social media by users). These two can differ some weeks and businesses may prefer one over the other.
 
 
 # Usage
 If you want to use this code you will need to create a virtual environment with the dependencies of the requirements.txt.
 
-Then you need to create a `.env` file with the credentials for your Postgres SQL database. For security reasons I don’t share mine in this repository but you can use `env_example.txt` as a template for yours. If you want to use another relational database management system, you will need to modify the `update_a_db` function in the `update_db.py` module. Remember that is the main file that runs the automation.
+Then you need to create a `.env` file with the credentials for your Postgres SQL database. For security reasons I don’t share mine in this repository but you can use `env_example.txt` as a template for yours. If you want to use another relational database management system, you will need to modify the `update_a_db` function in the `update_db.py` module.
 
 If you want to add or remove products, you can do it by changing `food.csv` in `ref_table`.
 

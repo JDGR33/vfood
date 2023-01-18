@@ -5,6 +5,8 @@ import os
 from dotenv import load_dotenv
 # local modules
 import data 
+import message
+from exchange_tw import exchange_from_tw_user
 
 
 def update_a_db(data:pd.DataFrame,user:str,password:str,host:str,port:str,db_name:str,table_name:str):
@@ -51,6 +53,53 @@ def prepare_food_data(scrapt_food_data:pd.DataFrame)->pd.DataFrame:
     #print(scrapt_food_data.head())
     return scrapt_food_data
 
+def prepare_bcv_data(raw_bcv_data:dict,rename={'date':'datetime','exchange_rate':'rate',"source":"nmae"})->pd.DataFrame:
+    """Prepare the raw data from the bcv for the table in the database
+
+    Parameters:
+    -----------
+    raw_bcv_data : dict
+        The result of scraping the exchange rate from the bcv
+
+    rename : dict
+        For renaming the columns
+     
+    Returns:
+    --------
+    pd.DataFrame
+        A clean DataFrame ready to be loaded to the data base
+    """
+    for k, v in raw_bcv_data.items():
+        raw_bcv_data[k]=[v]
+
+    rate_bcv = pd.DataFrame.from_dict(raw_bcv_data)[['date','exchange_rate','source']]
+    rate_bcv = rate_bcv.rename(columns=rename)
+    return(rate_bcv)
+
+def prepare_tw_data(raw_tweet_data:dict,rename={'date':'datetime','exchange_rate':'rate',"source":"nmae"})->pd.DataFrame:
+    """Prepare the raw data from the bcv for the table in the database
+
+    Parameters:
+    -----------
+    raw_tweet_data : dict
+        The result of scraping the exchange rate from the tweets
+
+    rename : dict
+        For renaming the columns
+     
+    Returns:
+    --------
+    pd.DataFrame
+        A clean DataFrame ready to be loaded to the data base
+    """
+    for k, v in raw_tweet_data.items():
+        raw_tweet_data[k]=[v]
+    
+    keep_col =['date','exchange_rate','source']
+    rate_tw = pd.DataFrame.from_dict(raw_tweet_data)[keep_col]
+    rate_tw = rate_tw.rename(columns=rename)
+    return(rate_tw)
+
 def get_list_foods(path:str)->list:
     """Get the list of food to scrap.
     Parameters:
@@ -79,7 +128,42 @@ def log_food(food_list:str,file:str):
     with open(file,'a') as log_file:
         log_file.write(food_list+"\n")
 
-if __name__ == "__main__":
+def update_exchange():
+    """Updates de Table for the Exchange Rate"""
+
+    #Get DataBase credentials from a .env
+    load_dotenv()
+    USER = os.getenv("USER")
+    PASSWORD = os.getenv("PASSWORD")
+    HOST = os.getenv("HOST")
+    PORT = os.getenv("PORT")
+
+    # Table and DataBase name to safe the scrape exchange Ratesr
+    db_name = "price_scrapt"
+    table_name = "exchange"
+
+    #Get raw data from the bcv and preparing it for the Database
+    rate_bcv_r =data.bcv_exchange_rate()
+    rate_bcv = prepare_bcv_data(rate_bcv_r)
+    print(rate_bcv)
+
+    #Get raw data from the Twitter and preparing it for the Database
+    rate_tw_r = exchange_from_tw_user("monitordolarvla")
+    rate_tw = prepare_tw_data(rate_tw_r)
+    print(rate_tw)
+
+    # Update food Table in the DataBase
+    update_a_db(pd.concat([rate_bcv,rate_tw]),USER,PASSWORD,HOST,PORT,db_name,table_name)
+
+    #Send a message informing the end of the Scraping
+    exchange_rate_msm =message.create_message_exchange([rate_bcv_r,rate_tw_r])
+
+    print(exchange_rate_msm)
+    message.telegram_message(exchange_rate_msm,)
+
+def update_foods():
+    """Scrape the list of foods and update the table in the DataBase."""
+
     cwd = os.getcwd()
     
     #Get the list of foods to scrap
@@ -110,3 +194,11 @@ if __name__ == "__main__":
     #Log the foods that where scrap
     log_file = os.path.join(cwd,'batch.log')
     log_food(str(food_list),log_file)
+
+    #Send a message informing the end of the Scrape
+    exchange_rate = data.bcv_exchange_rate()['exchange_rate']
+    source = data.bcv_exchange_rate()['source']
+    exchange_rate_msm = f"The exchange rate is *{exchange_rate}* Bs./$ according  to the *{source}*"
+    message_txt = message.create_message_food   (food_list,exchange_rate_msm)
+    print(message_txt)
+    message.telegram_message(message_txt,)
